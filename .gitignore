@@ -1,0 +1,19 @@
+.vs
+.vscode
+
+# Csharp files
+bin
+obj
+*.suo
+*.user
+*appsettings.*.json
+
+# Test files
+*.opencover.xml
+
+# Terraform files
+*.tfvars
+*.tfplan
+*.tfstate
+.terraform/.terraform/*
+*.hcl
