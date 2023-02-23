@@ -1,8 +1,9 @@
 ﻿namespace FasTnT.Epcis.Callback.Core.Events;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum EventAction
 {
-    Add,
-    Observe,
-    Delete
+    ADD,
+    OBSERVE,
+    DELETE
 }

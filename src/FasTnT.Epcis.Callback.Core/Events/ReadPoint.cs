@@ -3,6 +3,7 @@
 public class ReadPoint
 {
     [XmlElement("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; }
 
     public static implicit operator string(ReadPoint readPoint) => readPoint.Id;

@@ -10,5 +10,6 @@ public class ResultBody
     [XmlArrayItem(nameof(TransactionEvent), typeof(TransactionEvent))]
     [XmlArrayItem(nameof(AggregationEvent), typeof(AggregationEvent))]
     [XmlArrayItem(nameof(AssociationEvent), typeof(AssociationEvent))]
+    [JsonPropertyName("eventList")]
     public EpcisEvent[] EventList { get; set; }
 }

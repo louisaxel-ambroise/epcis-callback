@@ -5,7 +5,7 @@ public class AssociationEvent : EpcisEvent
     [XmlElement("parentID")]
     public string ParentId { get; set; }
     [XmlArray("childEPCs")]
-    public IEnumerable<string> ChildEPCs { get; set; }
+    public string[] ChildEPCs { get; set; }
     [XmlElement("action")]
     public EventAction Action { get; set; }
     [XmlElement("bizStep")]
