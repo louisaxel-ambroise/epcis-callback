@@ -30,11 +30,19 @@ public class EpcisCallbackBuilder
                 {
                     paramList[i] = callback.SubscriptionId;
                 }
-                if (parameters[i].ParameterType.Name == callback.QueryName)
+                else if (parameters[i].ParameterType.Name == callback.QueryName)
                 {
                     paramList[i] = callback.QueryName;
                 }
-                if (parameters[i].ParameterType == typeof(IEnumerable<EpcisEvent>))
+                else if (parameters[i].ParameterType == typeof(IEnumerable<EpcisEvent>))
+                {
+                    paramList[i] = callback.Events;
+                }
+                else if (parameters[i].ParameterType == typeof(EpcisEvent[]))
+                {
+                    paramList[i] = callback.Events.ToArray();
+                }
+                else if (parameters[i].ParameterType == typeof(EpcisCallback))
                 {
                     paramList[i] = callback.Events;
                 }

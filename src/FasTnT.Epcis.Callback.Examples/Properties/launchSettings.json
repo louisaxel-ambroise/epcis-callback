@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "FasTnT.Epcis.Callback.Examples": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:63161;http://localhost:63162"
+    }
+  }
+}

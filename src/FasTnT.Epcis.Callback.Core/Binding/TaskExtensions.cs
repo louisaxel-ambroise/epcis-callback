@@ -7,9 +7,18 @@ static class TaskExtensions
 {
     public static ValueTask<object> TryCastTask(this object taskObj)
     {
-        return taskObj is null
-            ? ValueTask.FromResult<object>(Results.NoContent())
-            : taskObj.CastTask();
+        if (taskObj is null || taskObj is Task)
+        {
+            return ValueTask.FromResult<object>(Results.NoContent());
+        }
+        else if (typeof(Task<>).IsAssignableFrom(taskObj.GetType())) 
+        { 
+            return taskObj.CastTask();
+        }
+        else
+        {
+            return ValueTask.FromResult(taskObj);
+        }
     }
 
     public static ValueTask<object> CastTask(this object taskObj)

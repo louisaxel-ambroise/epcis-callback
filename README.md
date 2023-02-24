@@ -54,6 +54,8 @@ app.MapEpcisCallback("v2_0/subscriptionCallback", opt =>
 });
 ```
 
+Using this extension method, either the `EpcisCallback` or the `IEnumerable<EpcisEvent>` can be used as parameter binding. As the subscriptionID value is already used as filter, accepting the event list can make the code more readable.
+
 # EventType extensions
 
 *TODO*
