@@ -1,4 +1,4 @@
-﻿namespace FasTnT.Epcis.Callback.Core.Events;
+﻿namespace FasTnT.Epcis.Callback.Core.Model;
 
 public class SensorReport
 {
