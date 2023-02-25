@@ -57,7 +57,7 @@ Then the `MapEpcisCallback` method allows to easily configure a different method
 app.MapEpcisCallback("epcis/callback", opt => 
 {
 	opt.OnCallback("aggregationSubscription", (EpcisCallback callback, IAggregationManager manager, CancellationToken cancellationToken) => manager.Register(callback.Events, cancellationToken));
-	opt.OnCallback("allEventsSubscription", (EpcisCallback callback) => { /* Do something with the callback */ });
+	opt.OnCallback("allEventsSubscription", (IEnumerable<EpcisEvent> events) => { /* Do something with the callback */ });
 });
 ```
 
