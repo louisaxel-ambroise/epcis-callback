@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FasTnT.Epcis.Callback.Api\FasTnT.Epcis.Callback.Api.csproj" />
+    <ProjectReference Include="..\FasTnT.Epcis.Callback.Core\FasTnT.Epcis.Callback.Core.csproj" />
+  </ItemGroup>
+</Project>

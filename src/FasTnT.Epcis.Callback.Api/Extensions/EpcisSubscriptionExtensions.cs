@@ -1,9 +1,10 @@
-﻿using FasTnT.Epcis.Callback.Core.Binding;
+﻿using FasTnT.Epcis.Callback.Api.Binding;
+using FasTnT.Epcis.Callback.Core.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FasTnT.Epcis.Callback.Core;
+namespace FasTnT.Epcis.Callback.Api.Extensions;
 
 public static class EpcisSubscriptionExtensions
 {
@@ -19,6 +20,21 @@ public static class EpcisSubscriptionExtensions
         services.AddSingleton(parserOptions);
 
         return services;
+    }
+
+    public static IMvcBuilder AddEpcisCallback(this IMvcBuilder mvcBuilder, Action<EpcisParserOptions> options = null)
+    {
+        var parserOptions = new EpcisParserOptions();
+
+        if (options is not null)
+        {
+            options(parserOptions);
+        }
+
+        mvcBuilder.Services.AddSingleton(parserOptions);
+        mvcBuilder.AddMvcOptions(opt => opt.ModelBinderProviders.Insert(0, new EpcisCallbackBinderProvider()));
+
+        return mvcBuilder;
     }
 
     public static IEndpointRouteBuilder MapEpcisCallback(this IEndpointRouteBuilder routeBuilder, string path, Action<EpcisCallbackBuilder> actions = null)

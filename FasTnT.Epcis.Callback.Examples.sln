@@ -5,7 +5,15 @@ VisualStudioVersion = 17.4.33015.44
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FasTnT.Epcis.Callback.Core", "src\FasTnT.Epcis.Callback.Core\FasTnT.Epcis.Callback.Core.csproj", "{26A06E29-F52E-40F1-AB57-CCF26616672B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FasTnT.Epcis.Callback.Examples", "src\FasTnT.Epcis.Callback.Examples\FasTnT.Epcis.Callback.Examples.csproj", "{21A40D55-6801-4ED5-96C6-B54657CA9297}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FasTnT.Epcis.Callback.Examples.MinimalApi", "src\FasTnT.Epcis.Callback.Examples.MinimalApi\FasTnT.Epcis.Callback.Examples.MinimalApi.csproj", "{21A40D55-6801-4ED5-96C6-B54657CA9297}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FasTnT.Epcis.Callback.Examples.WebSockets", "src\FasTnT.Epcis.Callback.WebSockets.Examples\FasTnT.Epcis.Callback.Examples.WebSockets.csproj", "{30B40D8F-0DBF-4CE8-A6C2-93E40C9187FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FasTnT.Epcis.Callback.Api", "src\FasTnT.Epcis.Callback.Api\FasTnT.Epcis.Callback.Api.csproj", "{5CF1A50E-100D-48BB-8409-BA7514789B1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FasTnT.Epcis.Callback.Examples.Controllers", "src\FasTnT.Epcis.Callback.Examples.Controllers\FasTnT.Epcis.Callback.Examples.Controllers.csproj", "{0B1FF6B6-7E8F-4BD3-BEAA-B4038EBB2A6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{17EE21CB-28EE-4118-BA0C-14C15A968133}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +29,25 @@ Global
 		{21A40D55-6801-4ED5-96C6-B54657CA9297}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21A40D55-6801-4ED5-96C6-B54657CA9297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21A40D55-6801-4ED5-96C6-B54657CA9297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30B40D8F-0DBF-4CE8-A6C2-93E40C9187FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30B40D8F-0DBF-4CE8-A6C2-93E40C9187FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30B40D8F-0DBF-4CE8-A6C2-93E40C9187FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30B40D8F-0DBF-4CE8-A6C2-93E40C9187FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CF1A50E-100D-48BB-8409-BA7514789B1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CF1A50E-100D-48BB-8409-BA7514789B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CF1A50E-100D-48BB-8409-BA7514789B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CF1A50E-100D-48BB-8409-BA7514789B1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B1FF6B6-7E8F-4BD3-BEAA-B4038EBB2A6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B1FF6B6-7E8F-4BD3-BEAA-B4038EBB2A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B1FF6B6-7E8F-4BD3-BEAA-B4038EBB2A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B1FF6B6-7E8F-4BD3-BEAA-B4038EBB2A6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{26A06E29-F52E-40F1-AB57-CCF26616672B} = {17EE21CB-28EE-4118-BA0C-14C15A968133}
+		{5CF1A50E-100D-48BB-8409-BA7514789B1D} = {17EE21CB-28EE-4118-BA0C-14C15A968133}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11681CC7-A44F-4B0D-9DFB-9A3C29C8CEAF}

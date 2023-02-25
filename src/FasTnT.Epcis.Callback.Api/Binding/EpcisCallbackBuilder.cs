@@ -1,8 +1,10 @@
-﻿using FasTnT.Epcis.Callback.Core.Model;
+﻿using FasTnT.Epcis.Callback.Api.Extensions;
+using FasTnT.Epcis.Callback.Core;
+using FasTnT.Epcis.Callback.Core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FasTnT.Epcis.Callback.Core.Binding;
+namespace FasTnT.Epcis.Callback.Api.Binding;
 
 public class EpcisCallbackBuilder
 {
@@ -10,11 +12,22 @@ public class EpcisCallbackBuilder
 
     public void OnCallback(string subscriptionId, Delegate action) => _mappedActions.Add(subscriptionId, action);
 
-    internal ValueTask<object> HandleCallback(EpcisCallback callback, HttpContext context, CancellationToken cancellationToken)
+    internal async ValueTask<object> HandleCallback(HttpContext context, CancellationToken cancellationToken)
     {
+        EpcisCallback callback;
+
+        try
+        {
+            callback = await EpcisCallbackBinder.BindAsync(context);
+        }
+        catch
+        {
+            return Results.Problem(statusCode: 400);
+        }
+
         return _mappedActions.TryGetValue(callback.SubscriptionId, out var handler)
-            ? HandleCallbackAction(handler, callback, context, cancellationToken)
-            : ValueTask.FromResult<object>(Results.Conflict());
+            ? await HandleCallbackAction(handler, callback, context, cancellationToken)
+            : Results.Conflict();
     }
 
     private static ValueTask<object> HandleCallbackAction(Delegate handler, EpcisCallback callback, HttpContext context, CancellationToken cancellationToken)

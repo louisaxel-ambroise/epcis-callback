@@ -7,10 +7,13 @@ This subscription callback can be used with either ASP.NET Core Minimal API or w
 
 ## Using ASP.NET Core MVC
 
-The different event types needs to be registered using the `UseEpcisCallback` extension method:
+The different event types needs to be registered using the `AddEpcisCallback` extension method after adding the controllers:
 
 ```cs
-builder.Services.UseEpcisCallback(opt => opt.RegisterBaseEventTypes());
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers().AddEpcisCallback(opt => opt.RegisterBaseEventTypes()); // Register the default EPCIS eventTypes
+
+[...]
 ```
 
 Then retrieving a callback from HTTP is as simple as mapping a POST endpoint with a `EpcisCallback` parameter, like so:
@@ -20,10 +23,17 @@ Then retrieving a callback from HTTP is as simple as mapping a POST endpoint wit
 [Route("[controller]")]
 public class EpcisCallbackController : ControllerBase
 {
-    [HttpPost]
-    public IActionResult Post([FromBody] EpcisCallback callback, CancellationToken cancellationToken)
+    private readonly ILogger<EpcisCallbackController> _logger;
+
+    public EpcisCallbackController(ILogger<EpcisCallbackController> logger)
     {
-        // TODO: do something with the callback
+        _logger = logger;
+    }
+
+    [HttpPost]
+    public IActionResult Post([FromBody] EpcisCallback callback)
+    {
+        _logger.LogInformation("Received {0} event(s) for subscription {1}", callback.Events.Count(), callback.SubscriptionId);
 
         return NoContent();
     }
@@ -35,26 +45,27 @@ public class EpcisCallbackController : ControllerBase
 The different event types needs to be registered using the `UseEpcisCallback` extension method:
 
 ```cs
-builder.Services.UseEpcisCallback(opt => opt.RegisterBaseEventTypes());
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.UseEpcisCallback(opt => opt.RegisterBaseEventTypes()); // Register the default EPCIS eventTypes
+
+[...]
 ```
 
-Then the `EpcisCallback` type can be used as a parameter from any POST endpoint:
+Then the `MapEpcisCallback` method allows to easily configure a different method depending on the Subscription ID value:
 
 ```cs
-app.MapPost("v2_0/subscriptionCallback", (EpcisCallback callback) => { /* Do something with the callback */ });
-```
-
-The `MapEpcisCallback` method allows to easily configure a different method depending on the Subscription ID value:
-
-```cs
-app.MapEpcisCallback("v2_0/subscriptionCallback", opt => 
+app.MapEpcisCallback("epcis/callback", opt => 
 {
 	opt.OnCallback("aggregationSubscription", (EpcisCallback callback, IAggregationManager manager, CancellationToken cancellationToken) => manager.Register(callback.Events, cancellationToken));
-	opt.OnCallback("allEventsSubscription", (EpcisCallback callback, ) => { /* Do something with the callback */ });
+	opt.OnCallback("allEventsSubscription", (EpcisCallback callback) => { /* Do something with the callback */ });
 });
 ```
 
-Using this extension method, either the `EpcisCallback` or the `IEnumerable<EpcisEvent>` can be used as parameter binding. As the subscriptionID value is already used as filter, accepting the event list can make the code more readable.
+Using this extension method, either the `EpcisCallback` or the `IEnumerable<EpcisEvent>` can be used as parameter binding. As the subscriptionID value is already used as filter, accepting the event list directly can make the code more readable.
+
+## Using WebSocket subscription
+
+*TODO*
 
 # EventType extensions
 

@@ -1,19 +1,16 @@
-﻿using FasTnT.Epcis.Callback.Core.Model;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+﻿using FasTnT.Epcis.Callback.Core.Attributes;
+using FasTnT.Epcis.Callback.Core.Extensions;
+using FasTnT.Epcis.Callback.Core.Model;
 using System.Reflection;
 using System.Text.Json;
 
-namespace FasTnT.Epcis.Callback.Core.Binding;
+namespace FasTnT.Epcis.Callback.Core.Parsers;
 
-[ModelBinder(BinderType = typeof(EpcisSubscriptionBinder))]
-public record EpcisCallback(string SubscriptionId, string QueryName, IEnumerable<EpcisEvent> Events)
+public static class JsonCallbackParser
 {
-    public static async ValueTask<EpcisCallback> BindAsync(HttpContext context)
+    public static async ValueTask<EpcisCallback> ParseAsync(Stream content, EpcisParserOptions parser, CancellationToken cancellationToken)
     {
-        var parserOptions = context.RequestServices.GetRequiredService<EpcisParserOptions>();
-        var document = await JsonDocument.ParseAsync(context.Request.Body, cancellationToken: context.RequestAborted);
+        var document = await JsonDocument.ParseAsync(content, cancellationToken: cancellationToken);
         var namespaceContext = new EpcisNamespaceContext();
 
         if (!document.RootElement.TryGetProperty("type", out var documentType) || documentType.GetString() != "EPCISQueryDocument")
@@ -49,9 +46,8 @@ public record EpcisCallback(string SubscriptionId, string QueryName, IEnumerable
         {
             foreach (var element in eventContainer.EnumerateArray())
             {
-                eventList.Add(ParseEvent(element, namespaceContext, parserOptions));
+                eventList.Add(ParseEvent(element, namespaceContext, parser));
             }
-            // TODO: parse event list
         }
 
         return new(subscriptionId, queryName, eventList);
@@ -96,8 +92,7 @@ public record EpcisCallback(string SubscriptionId, string QueryName, IEnumerable
                 continue;
             }
 
-            // Parse correct type
-            if (property.PropertyType == typeof(string) || property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?) || property.PropertyType == typeof(DateTimeOffset) || property.PropertyType == typeof(DateTimeOffset?) || property.PropertyType.IsPrimitive)
+            if (property.PropertyType.IsPrimitive())
             {
                 value = jsonValue.Value.Deserialize(property.PropertyType);
             }
@@ -111,7 +106,7 @@ public record EpcisCallback(string SubscriptionId, string QueryName, IEnumerable
                     ? property.PropertyType.GetElementType()
                     : property.PropertyType.GenericTypeArguments[0];
 
-                if (innerElementType.IsPrimitive || innerElementType == typeof(string))
+                if (innerElementType.IsPrimitive())
                 {
                     value = jsonValue.Value.Deserialize(property.PropertyType);
                 }

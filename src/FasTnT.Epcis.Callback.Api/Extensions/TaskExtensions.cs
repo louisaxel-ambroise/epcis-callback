@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Reflection;
 
-namespace FasTnT.Epcis.Callback.Core.Binding;
+namespace FasTnT.Epcis.Callback.Api.Extensions;
 
 static class TaskExtensions
 {
@@ -11,8 +11,8 @@ static class TaskExtensions
         {
             return ValueTask.FromResult<object>(Results.NoContent());
         }
-        else if (typeof(Task<>).IsAssignableFrom(taskObj.GetType())) 
-        { 
+        else if (typeof(Task<>).IsAssignableFrom(taskObj.GetType()))
+        {
             return taskObj.CastTask();
         }
         else
