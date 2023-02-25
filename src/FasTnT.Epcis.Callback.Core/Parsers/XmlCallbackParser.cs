@@ -11,7 +11,7 @@ namespace FasTnT.Epcis.Callback.Core.Parsers;
 
 public static class XmlCallbackParser
 {
-    public static async ValueTask<EpcisCallback> ParseAsync(Stream content, EpcisParserOptions parserOptions, CancellationToken cancellationToken)
+    public static async ValueTask<EpcisCallback> ParseAsync(Stream content, EpcisParser parser, CancellationToken cancellationToken)
     {
         var document = await XDocument.LoadAsync(content, LoadOptions.None, cancellationToken);
         var namespaceManager = new XmlNamespaceManager(new NameTable());
@@ -33,7 +33,7 @@ public static class XmlCallbackParser
         {
             foreach (var element in eventContainer.Elements().Select(FlattenExtensions))
             {
-                eventList.Add(ParseEvent(element, parserOptions));
+                eventList.Add(ParseEvent(element, parser));
             }
         }
 
@@ -50,10 +50,10 @@ public static class XmlCallbackParser
         return FlattenExtensions(element.Elements().First());
     }
 
-    private static EpcisEvent ParseEvent(XElement element, EpcisParserOptions parserOptions)
+    private static EpcisEvent ParseEvent(XElement element, EpcisParser parser)
     {
         var eventType = element.Name.LocalName;
-        var targetType = parserOptions.GetFromType(eventType);
+        var targetType = parser.GetFromType(eventType);
 
         if (targetType is null)
         {

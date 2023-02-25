@@ -1,5 +1,5 @@
 ﻿using FasTnT.Epcis.Callback.Api.Binding;
-using FasTnT.Epcis.Callback.Core.Extensions;
+using FasTnT.Epcis.Callback.Core.Parsers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +17,7 @@ public static class EpcisSubscriptionExtensions
             options(parserOptions);
         }
 
-        services.AddSingleton(parserOptions);
+        services.AddSingleton(parserOptions.BuildParser());
 
         return services;
     }
@@ -31,7 +31,7 @@ public static class EpcisSubscriptionExtensions
             options(parserOptions);
         }
 
-        mvcBuilder.Services.AddSingleton(parserOptions);
+        mvcBuilder.Services.AddSingleton(parserOptions.BuildParser());
         mvcBuilder.AddMvcOptions(opt => opt.ModelBinderProviders.Insert(0, new EpcisCallbackBinderProvider()));
 
         return mvcBuilder;

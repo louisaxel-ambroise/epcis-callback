@@ -1,6 +1,6 @@
 ﻿using FasTnT.Epcis.Callback.Core.Model;
 
-namespace FasTnT.Epcis.Callback.Core.Extensions;
+namespace FasTnT.Epcis.Callback.Core.Parsers;
 
 public class EpcisParserOptions
 {
@@ -42,10 +42,8 @@ public class EpcisParserOptions
         return this;
     }
 
-    public Type GetFromType(string eventType)
+    public EpcisParser BuildParser()
     {
-        return _registeredTypes.TryGetValue(eventType, out var registeredType)
-            ? registeredType
-            : throw new NotImplementedException();
+        return new EpcisParser(_registeredTypes);
     }
 }

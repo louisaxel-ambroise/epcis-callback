@@ -65,7 +65,11 @@ Using this extension method, either the `EpcisCallback` or the `IEnumerable<Epci
 
 ## Using WebSocket subscription
 
-*TODO*
+The `JsonCallbackParser.ParseAsync(Stream, EpcisParser, CancellationToken)` method can be used to parse a received message from a websocket connection. The EpcisParser can be created using the `EpcisParserOptions` class like this:
+
+```cs
+var parser = new EpcisParserOptions().RegisterBaseEventTypes().BuildParser();
+```
 
 # EventType extensions
 

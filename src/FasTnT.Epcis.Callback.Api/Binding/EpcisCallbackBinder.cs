@@ -1,6 +1,5 @@
 ﻿using FasTnT.Epcis.Callback.Api.Extensions;
 using FasTnT.Epcis.Callback.Core;
-using FasTnT.Epcis.Callback.Core.Extensions;
 using FasTnT.Epcis.Callback.Core.Parsers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -32,7 +31,7 @@ internal class EpcisCallbackBinder : IModelBinder
 
     public static ValueTask<EpcisCallback> BindAsync(HttpContext context)
     {
-        var parser = context.RequestServices.GetRequiredService<EpcisParserOptions>();
+        var parser = context.RequestServices.GetRequiredService<EpcisParser>();
 
         if (context.Request.HasContentType("xml"))
         {
@@ -43,6 +42,6 @@ internal class EpcisCallbackBinder : IModelBinder
             return JsonCallbackParser.ParseAsync(context.Request.Body, parser, context.RequestAborted); // Assume v2.0
         }
 
-        throw new Exception("Unable to parse EpcisCallbeck - unknown content-type");
+        throw new Exception("Unable to parse EpcisCallbeck: unknown content-type");
     }
 }

@@ -6,7 +6,7 @@ Console.Title = "Client";
 
 using var ws = new ClientWebSocket();
 var url = new Uri("wss://localhost:5001/v2_0/queries/AllObjectEvents/events?stream=true&auth=YWRtaW46UEBzc3cwcmQ=");
-var parser = new EpcisParserOptions().RegisterBaseEventTypes();
+var parser = new EpcisParserOptions().RegisterBaseEventTypes().BuildParser();
 
 await ws.ConnectAsync(url, CancellationToken.None);
 

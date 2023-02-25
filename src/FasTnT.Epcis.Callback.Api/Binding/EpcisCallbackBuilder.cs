@@ -39,17 +39,21 @@ public class EpcisCallbackBuilder
 
             for (int i = 0; i < paramList.Length; i++)
             {
-                if (parameters[i].ParameterType.Name == callback.SubscriptionId)
+                if (parameters[i].ParameterType.Name.Equals(nameof(callback.SubscriptionId), StringComparison.OrdinalIgnoreCase) && parameters[i].ParameterType == typeof(string))
                 {
                     paramList[i] = callback.SubscriptionId;
                 }
-                else if (parameters[i].ParameterType.Name == callback.QueryName)
+                else if (parameters[i].ParameterType.Name.Equals(nameof(callback.QueryName), StringComparison.OrdinalIgnoreCase) && parameters[i].ParameterType == typeof(string))
                 {
                     paramList[i] = callback.QueryName;
                 }
                 else if (parameters[i].ParameterType == typeof(IEnumerable<EpcisEvent>))
                 {
                     paramList[i] = callback.Events;
+                }
+                else if (parameters[i].ParameterType == typeof(List<EpcisEvent>))
+                {
+                    paramList[i] = callback.Events.ToList();
                 }
                 else if (parameters[i].ParameterType == typeof(EpcisEvent[]))
                 {

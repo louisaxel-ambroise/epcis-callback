@@ -8,7 +8,7 @@ namespace FasTnT.Epcis.Callback.Core.Parsers;
 
 public static class JsonCallbackParser
 {
-    public static async ValueTask<EpcisCallback> ParseAsync(Stream content, EpcisParserOptions parser, CancellationToken cancellationToken)
+    public static async ValueTask<EpcisCallback> ParseAsync(Stream content, EpcisParser parser, CancellationToken cancellationToken)
     {
         var document = await JsonDocument.ParseAsync(content, cancellationToken: cancellationToken);
         var namespaceContext = new EpcisNamespaceContext();
@@ -53,7 +53,7 @@ public static class JsonCallbackParser
         return new(subscriptionId, queryName, eventList);
     }
 
-    private static EpcisEvent ParseEvent(JsonElement element, EpcisNamespaceContext namespaceContext, EpcisParserOptions parserOptions)
+    private static EpcisEvent ParseEvent(JsonElement element, EpcisNamespaceContext namespaceContext, EpcisParser parser)
     {
         var jsonEventType = element.GetProperty("type").GetString();
 
@@ -62,7 +62,7 @@ public static class JsonCallbackParser
             throw new Exception("Unable to parse document: JSON is not a valid EPCISQueryDocument (missing type property)");
         }
 
-        var targetType = parserOptions.GetFromType(jsonEventType);
+        var targetType = parser.GetFromType(jsonEventType);
 
         if (targetType is null)
         {
