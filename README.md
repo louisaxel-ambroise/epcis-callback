@@ -42,23 +42,22 @@ public class EpcisCallbackController : ControllerBase
 
 ## Using Minimal API
 
-The different event types needs to be registered using the `UseEpcisCallback` extension method:
+The different event types needs to be registered using the `UseEpcisCallback` extension method, then the `MapEpcisCallback` method allows to easily configure a different method depending on the Subscription ID value:
 
 ```cs
+using FasTnT.Epcis.Callback.Api.Extensions;
+using FasTnT.Epcis.Callback.Core.Model;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.UseEpcisCallback(opt => opt.RegisterBaseEventTypes()); // Register the default EPCIS eventTypes
 
-[...]
-```
-
-Then the `MapEpcisCallback` method allows to easily configure a different method depending on the Subscription ID value:
-
-```cs
+var app = builder.Build();
 app.MapEpcisCallback("epcis/callback", opt => 
 {
-	opt.OnCallback("aggregationSubscription", (EpcisCallback callback, IAggregationManager manager, CancellationToken cancellationToken) => manager.Register(callback.Events, cancellationToken));
-	opt.OnCallback("allEventsSubscription", (IEnumerable<EpcisEvent> events) => { /* Do something with the callback */ });
+    opt.OnCallback("allEventsSubscription", (IEnumerable<EpcisEvent> events) => { /* Do something with the callback */ });
 });
+
+app.Run();
 ```
 
 Using this extension method, either the `EpcisCallback` or the `IEnumerable<EpcisEvent>` can be used as parameter binding. As the subscriptionID value is already used as filter, accepting the event list directly can make the code more readable.
