@@ -60,7 +60,25 @@ app.MapEpcisCallback("epcis/callback", opt =>
 app.Run();
 ```
 
-Using this extension method, either the `EpcisCallback` or the `IEnumerable<EpcisEvent>` can be used as parameter binding. As the subscriptionID value is already used as filter, accepting the event list directly can make the code more readable.
+It is also possible to register a callback independently of the SubscriptionID value:
+
+The different event types needs to be registered using the `UseEpcisCallback` extension method, then the `MapEpcisCallback` method allows to easily configure a different method depending on the Subscription ID value:
+
+```cs
+using FasTnT.Epcis.Callback.Api.Extensions;
+using FasTnT.Epcis.Callback.Core.Model;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.UseEpcisCallback(opt => opt.RegisterBaseEventTypes()); // Register the default EPCIS eventTypes
+
+var app = builder.Build();
+
+app.MapEpcisCallback("/epcis/anycallback", (EpcisCallback callback) => Results.Ok($"Received callback for subscription {callback.SubscriptionId}"));
+app.Run();
+```
+
+
+Using these extension methods, either the `EpcisCallback` or the `IEnumerable<EpcisEvent>` can be used as parameter binding. As the subscriptionID value is already used as filter, accepting the event list directly can make the code more readable.
 
 ## Using WebSocket subscription
 

@@ -1,4 +1,5 @@
 ﻿using FasTnT.Epcis.Callback.Api.Extensions;
+using FasTnT.Epcis.Callback.Core;
 using FasTnT.Epcis.Callback.Core.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,5 +15,8 @@ app.MapEpcisCallback("/epcis/callback", opt =>
         await Task.Delay(500);
     });
 });
+
+// Allow to separate the actions based on the subscriptionID
+app.MapEpcisCallback("/epcis/anycallback", (EpcisCallback callback) => Results.Ok($"Received callback for subscription {callback.SubscriptionId}"));
 
 app.Run();

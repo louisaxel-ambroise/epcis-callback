@@ -6,13 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FasTnT.Epcis.Callback.Api.Binding;
 
-public class EpcisCallbackBuilder
+public class EpcisCallbackHandler
 {
-    private readonly Dictionary<string, Delegate> _mappedActions = new();
-
-    public void OnCallback(string subscriptionId, Delegate action) => _mappedActions.Add(subscriptionId, action);
-
-    internal async ValueTask<object> HandleCallback(HttpContext context, CancellationToken cancellationToken)
+    public static async ValueTask<object> HandleCallback(HttpContext context, IEpcisCallbackProvider callbackProvider)
     {
         EpcisCallback callback;
 
@@ -25,12 +21,14 @@ public class EpcisCallbackBuilder
             return Results.Problem(statusCode: 400);
         }
 
-        return _mappedActions.TryGetValue(callback.SubscriptionId, out var handler)
-            ? await HandleCallbackAction(handler, callback, context, cancellationToken)
+        var handler = callbackProvider.GetCallbackForSubscription(callback.SubscriptionId);
+
+        return handler is not null
+            ? await HandleCallbackAction(handler, callback, context)
             : Results.Conflict();
     }
 
-    private static ValueTask<object> HandleCallbackAction(Delegate handler, EpcisCallback callback, HttpContext context, CancellationToken cancellationToken)
+    private static ValueTask<object> HandleCallbackAction(Delegate handler, EpcisCallback callback, HttpContext context)
     {
         try
         {
@@ -61,11 +59,11 @@ public class EpcisCallbackBuilder
                 }
                 else if (parameters[i].ParameterType == typeof(EpcisCallback))
                 {
-                    paramList[i] = callback.Events;
+                    paramList[i] = callback;
                 }
                 else if (parameters[i].ParameterType == typeof(CancellationToken))
                 {
-                    paramList[i] = cancellationToken;
+                    paramList[i] = context.RequestAborted;
                 }
                 else
                 {

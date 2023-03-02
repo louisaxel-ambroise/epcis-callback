@@ -1,6 +1,7 @@
 ﻿using FasTnT.Epcis.Callback.Api.Binding;
 using FasTnT.Epcis.Callback.Core.Parsers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,16 +38,27 @@ public static class EpcisSubscriptionExtensions
         return mvcBuilder;
     }
 
-    public static IEndpointRouteBuilder MapEpcisCallback(this IEndpointRouteBuilder routeBuilder, string path, Action<EpcisCallbackBuilder> actions = null)
+    public static IEndpointRouteBuilder MapEpcisCallback(this IEndpointRouteBuilder routeBuilder, string path, Action<EpcisCallbackProviderBuilder> actions = null)
     {
-        var builder = new EpcisCallbackBuilder();
+        var builder = new EpcisCallbackProviderBuilder();
 
         if (actions is not null)
         {
             actions(builder);
         }
 
-        routeBuilder.MapPost(path, builder.HandleCallback);
+        var callbackProvider = builder.Build();
+
+        routeBuilder.MapPost(path, (HttpContext context) => EpcisCallbackHandler.HandleCallback(context, callbackProvider));
+
+        return routeBuilder;
+    }
+
+    public static IEndpointRouteBuilder MapEpcisCallback(this IEndpointRouteBuilder routeBuilder, string path, Delegate action)
+    {
+        var callbackProvider = new SingleEpcisCallbackProvider(action);
+
+        routeBuilder.MapPost(path, (HttpContext context) => EpcisCallbackHandler.HandleCallback(context, callbackProvider));
 
         return routeBuilder;
     }
